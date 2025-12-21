@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"vyachik/test-backend/service/hello"
 	"vyachik/test-backend/service/user"
 
 	"github.com/gorilla/mux"
@@ -23,6 +24,9 @@ func NewAPIServer(addr string, db *sql.DB) *APIServer {
 
 func (s *APIServer) Run() error {
 	router := mux.NewRouter()
+	rootHandler := hello.NewHandler()
+	rootHandler.RegisterRoutes(router)
+
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
 	userHandler := user.NewHandler()
