@@ -34,12 +34,15 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusBadRequest, err)
 	}
 
-	if err := utils.Validate.Struct(payload); err != nil {
+	err := utils.Validate.Struct(payload)
+
+	if err != nil {
 		errors := err.(validator.ValidationErrors)
-		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("Invalid payload &v", errors))
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("Invalid payload %v", errors))
+		return
 	}
 
-	_, err := h.store.GetUserByEmail(payload.Email)
+	_, err = h.store.GetUserByEmail(payload.Email)
 	if err == nil {
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("User with email %s already exists", payload.Email))
 		return
