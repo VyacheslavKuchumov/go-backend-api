@@ -10,7 +10,7 @@ import (
 func NewMySQLStorage(cfg mysql.Config) (*sql.DB, error) {
 	db, err := sql.Open("mysql", cfg.FormatDSN())
 	if err != nil {
-		log.Println("Failed to open MySQL connection:", err)
+		log.Fatal("Failed to open MySQL connection:", err)
 	}
 
 	return db, nil
