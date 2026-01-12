@@ -4,7 +4,6 @@ import (
 	"VyacheslavKuchumov/test-backend/types"
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -70,7 +69,7 @@ func TestUserServiceHandlers(t *testing.T) {
 type mockUserStore struct{}
 
 func (m *mockUserStore) GetUserByEmail(email string) (*types.User, error) {
-	return nil, fmt.Errorf("gdfgfd")
+	return nil, nil
 }
 
 func (m *mockUserStore) GetUserByID(id int) (*types.User, error) {
