@@ -1,4 +1,4 @@
-module vyachik/test-backend
+module VyacheslavKuchumov/test-backend
 
 go 1.25.5
 

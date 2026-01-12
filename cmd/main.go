@@ -1,8 +1,8 @@
 package main
 
 import (
+	"VyacheslavKuchumov/test-backend/cmd/api"
 	"log"
-	"vyachik/test-backend/cmd/api"
 )
 
 func main() {

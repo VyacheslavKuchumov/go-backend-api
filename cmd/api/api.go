@@ -1,11 +1,11 @@
 package api
 
 import (
+	"VyacheslavKuchumov/test-backend/service/hello"
+	"VyacheslavKuchumov/test-backend/service/user"
 	"database/sql"
 	"log"
 	"net/http"
-	"vyachik/test-backend/service/hello"
-	"vyachik/test-backend/service/user"
 
 	"github.com/gorilla/mux"
 )
