@@ -4,6 +4,7 @@ import (
 	"VyacheslavKuchumov/test-backend/types"
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -22,8 +23,12 @@ func TestUserServiceHandlers(t *testing.T) {
 			Email:     "fdgdfg",
 			Password:  "asdfd",
 		}
-		marshaled, _ := json.Marshal(payload)
-		req, err := http.NewRequest(http.MethodPost, "/register", bytes.NewBuffer(marshaled))
+		marshalled, err := json.Marshal(payload)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		req, err := http.NewRequest(http.MethodPost, "/register", bytes.NewBuffer(marshalled))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -65,7 +70,7 @@ func TestUserServiceHandlers(t *testing.T) {
 type mockUserStore struct{}
 
 func (m *mockUserStore) GetUserByEmail(email string) (*types.User, error) {
-	return nil, nil
+	return nil, fmt.Errorf("gdfgfd")
 }
 
 func (m *mockUserStore) GetUserByID(id int) (*types.User, error) {
