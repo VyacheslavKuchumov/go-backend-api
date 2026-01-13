@@ -6,7 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 type APIServer struct {
@@ -22,15 +23,15 @@ func NewAPIServer(addr string, db *sql.DB) *APIServer {
 }
 
 func (s *APIServer) Run() error {
-	router := mux.NewRouter()
-
-	subrouter := router.PathPrefix("/api/v1").Subrouter()
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
 
 	userStore := user.NewStore(s.db)
 	userHandler := user.NewHandler(userStore)
-	userHandler.RegisterRoutes(subrouter)
+
+	userHandler.RegisterRoutes(r, "/v1")
 
 	log.Println("Listening on", s.addr)
 
-	return http.ListenAndServe(s.addr, router)
+	return http.ListenAndServe(s.addr, r)
 }
