@@ -19,6 +19,14 @@
             "mode": "test",
             "program": "service/auth",
             "output": "bin/user.test",
-        }
+        },
+        {
+            "name": "Launch Server In Debug Mode",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "cmd",
+            "output": "bin/server.test",
+        },
     ]
 }
