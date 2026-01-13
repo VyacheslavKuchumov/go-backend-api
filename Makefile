@@ -4,6 +4,8 @@ MIGRATION_DIR := cmd/migrate/migrations
 # Ensure 'migration' is marked as a phony target
 .PHONY: migration
 
+clean:
+	@rm -rf bin
 
 build:
 	@go build -o bin/server cmd/main.go
