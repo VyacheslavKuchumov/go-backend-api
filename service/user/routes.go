@@ -1,6 +1,7 @@
 package user
 
 import (
+	"VyacheslavKuchumov/test-backend/config"
 	"VyacheslavKuchumov/test-backend/service/auth"
 	"VyacheslavKuchumov/test-backend/types"
 	"VyacheslavKuchumov/test-backend/utils"
@@ -25,7 +26,34 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 }
 
 func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
+	var payload types.LoginUserPayload
+	if err := utils.ParseJSON(r, &payload); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
 
+	err := utils.Validate.Struct(payload)
+
+	if err != nil {
+		errors := err.(validator.ValidationErrors)
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("Invalid payload %v", errors))
+		return
+	}
+
+	u, err := h.store.GetUserByEmail(payload.Email)
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("User not found, invalid email or password"))
+		return
+	}
+
+	if !auth.ComparePassword(u.Password, payload.Password) {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("User not found, invalid email or password"))
+		return
+	}
+	secret := []byte(config.Envs.JWTSecret)
+	token, err := auth.CreateJWT(secret, u.ID)
+
+	utils.WriteJSON(w, http.StatusOK, map[string]string{"token": token})
 }
 
 func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
@@ -43,12 +71,8 @@ func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.store.GetUserByEmail(payload.Email)
-	if err != nil {
-		utils.WriteError(w, http.StatusInternalServerError, err)
-		return
-	}
-	if user != nil {
+	_, err = h.store.GetUserByEmail(payload.Email)
+	if err == nil {
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("User with email %s already exists", payload.Email))
 		return
 	}
