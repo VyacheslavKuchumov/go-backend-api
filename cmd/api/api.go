@@ -1,6 +1,7 @@
 package api
 
 import (
+	"VyacheslavKuchumov/test-backend/service/auth"
 	"VyacheslavKuchumov/test-backend/service/product"
 	"VyacheslavKuchumov/test-backend/service/user"
 	"database/sql"
@@ -37,8 +38,8 @@ func (s *APIServer) Run() error {
 		r.Post("/register", userHandler.HandleRegister)
 
 		r.Route("/product", func(r chi.Router) {
-			r.Get("/", productHandler.HandleGetProducts)
-			r.Post("/", productHandler.HandleCreateProduct)
+			r.Get("/", auth.WithJWTAuth(productHandler.HandleGetProducts, userStore))
+			r.Post("/", auth.WithJWTAuth(productHandler.HandleCreateProduct, userStore))
 		})
 	})
 

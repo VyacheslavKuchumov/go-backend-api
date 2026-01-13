@@ -10,7 +10,8 @@ import (
 )
 
 type Handler struct {
-	store types.ProductStore
+	store     types.ProductStore
+	userStore types.UserStore
 }
 
 func NewHandler(store types.ProductStore) *Handler {
@@ -28,6 +29,9 @@ func (h *Handler) HandleGetProducts(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) HandleCreateProduct(w http.ResponseWriter, r *http.Request) {
+	// // ПОЛУЧАЕМ ЮЗЕРА ОТПРАВИВШЕГО ЗАПРОС
+	// auth.GetUserIDFromContext(r.Context())
+
 	var payload types.CreateProductPayload
 	if err := utils.ParseJSON(r, &payload); err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err)
