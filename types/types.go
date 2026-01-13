@@ -9,8 +9,8 @@ type UserStore interface {
 }
 
 type ProductStore interface {
-	GetProducts() ([]*Product, error)
 	CreateProduct(CreateProductPayload) error
+	GetProducts() ([]*Product, error)
 }
 
 type Product struct {
