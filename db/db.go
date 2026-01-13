@@ -13,5 +13,5 @@ func NewMySQLStorage(cfg mysql.Config) (*sql.DB, error) {
 		log.Fatal("Failed to open MySQL connection:", err)
 	}
 
-	return db, nil
+	return db, err
 }

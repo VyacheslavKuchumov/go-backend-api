@@ -9,7 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi/v5"
 )
 
 func TestUserServiceHandlers(t *testing.T) {
@@ -33,9 +33,9 @@ func TestUserServiceHandlers(t *testing.T) {
 			t.Fatal(err)
 		}
 		rr := httptest.NewRecorder()
-		router := mux.NewRouter()
+		router := chi.NewRouter()
 
-		router.HandleFunc("/register", handler.handleRegister)
+		router.HandleFunc("/register", handler.HandleRegister)
 		router.ServeHTTP(rr, req)
 
 		if rr.Code != http.StatusBadRequest {
@@ -56,9 +56,9 @@ func TestUserServiceHandlers(t *testing.T) {
 			t.Fatal(err)
 		}
 		rr := httptest.NewRecorder()
-		router := mux.NewRouter()
+		router := chi.NewRouter()
 
-		router.HandleFunc("/register", handler.handleRegister)
+		router.HandleFunc("/register", handler.HandleRegister)
 		router.ServeHTTP(rr, req)
 
 		if rr.Code != http.StatusCreated {

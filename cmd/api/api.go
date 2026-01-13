@@ -1,6 +1,7 @@
 package api
 
 import (
+	"VyacheslavKuchumov/test-backend/service/product"
 	"VyacheslavKuchumov/test-backend/service/user"
 	"database/sql"
 	"log"
@@ -25,11 +26,21 @@ func NewAPIServer(addr string, db *sql.DB) *APIServer {
 func (s *APIServer) Run() error {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-
 	userStore := user.NewStore(s.db)
 	userHandler := user.NewHandler(userStore)
+	productStore := product.NewStore(s.db)
+	productHandler := product.NewHandler(productStore)
 
-	userHandler.RegisterRoutes(r, "/v1")
+	r.Route("/api/v1", func(r chi.Router) {
+
+		r.Post("/login", userHandler.HandleLogin)
+		r.Post("/register", userHandler.HandleRegister)
+
+		r.Route("/product", func(r chi.Router) {
+			r.Get("/", productHandler.HandleGetProducts)
+			r.Post("/", productHandler.HandleCreateProduct)
+		})
+	})
 
 	log.Println("Listening on", s.addr)
 
