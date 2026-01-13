@@ -1,8 +1,17 @@
 build:
-	@go build -o bin/backend_app cmd/main.go
+	@go build -o bin/server cmd/main.go
 
 test:
 	@go test -v ./...
 
 run: build
-	@./bin/backend_app
+	@./bin/server
+
+migration: 
+	@migration create -ext sql -dir cmd/migrate/migrations $(filter-out $@,$ (MAKECMDGOALS))
+
+migrate-up:
+	@go run cmd/migrate/main.go up
+
+migrate-down:
+	@go run cmd/migrate/main.go down

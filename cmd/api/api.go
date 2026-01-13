@@ -1,7 +1,6 @@
 package api
 
 import (
-	"VyacheslavKuchumov/test-backend/service/hello"
 	"VyacheslavKuchumov/test-backend/service/user"
 	"database/sql"
 	"log"
@@ -24,8 +23,6 @@ func NewAPIServer(addr string, db *sql.DB) *APIServer {
 
 func (s *APIServer) Run() error {
 	router := mux.NewRouter()
-	rootHandler := hello.NewHandler()
-	rootHandler.RegisterRoutes(router)
 
 	subrouter := router.PathPrefix("/api/v1").Subrouter()
 
